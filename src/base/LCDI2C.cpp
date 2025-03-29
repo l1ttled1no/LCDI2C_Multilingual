@@ -25,6 +25,9 @@ inline void LCDI2C::write(uint8_t value) {
 #endif
 #include "Wire.h"
 
+
+
+
 static bool wireBegan = false;	//// Added by Loc P. Le not to call Wire.begin() multiple times
 
 // When the display powers up, it is configured as follows:
@@ -62,8 +65,12 @@ void LCDI2C::init_priv()
 {
 	//// Added by Loc P. Le not to call Wire.begin() again in multiple LCDs setup
 	if (!wireBegan) {
+		#ifdef SDA_PIN && SCL_PIN
+		Wire.begin(SDA_PIN, SCL_PIN);	//// Original code
+		#else
 		Wire.begin();	//// Original code
 		wireBegan = true;
+		#endif
 	}
 
 	_displayfunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
